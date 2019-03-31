@@ -2,9 +2,7 @@ package io.github.aedans.dnd.view
 
 import io.github.aedans.dnd.form.NewCampaignFragment
 import io.github.aedans.dnd.model.Campaign
-import io.github.aedans.dnd.model.Setting
 import io.reactivex.Single
-import javafx.event.EventTarget
 import javafx.scene.control.SelectionMode
 import tornadofx.*
 

@@ -5,7 +5,7 @@ import io.github.aedans.dnd.controller.Util
 import io.reactivex.Observable
 import java.io.File
 
-data class Campaign(val name: String, val settingName: String) {
+data class Campaign(val name: String, val locationName: String) {
     companion object {
         fun read(campaignName: String) =
             Gson.read<Campaign>(File(Util.campaignsFile, "$campaignName.json"))

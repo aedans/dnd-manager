@@ -1,9 +1,9 @@
 package io.github.aedans.dnd.view
 
-import io.github.aedans.dnd.form.NewSettingFragment
-import io.github.aedans.dnd.form.SelectSettingFragment
+import io.github.aedans.dnd.form.NewLocationFragment
+import io.github.aedans.dnd.form.SelectLocationFragment
 import io.github.aedans.dnd.model.Campaign
-import io.github.aedans.dnd.model.Setting
+import io.github.aedans.dnd.model.Location
 import io.reactivex.Single
 import javafx.scene.control.TreeItem
 import javafx.scene.layout.Pane
@@ -22,18 +22,18 @@ class CampaignView : View() {
         }
     }
 
-    val settingDisplay = Pane()
+    val locationDisplay = Pane()
 
-    val settingsTree = treeview<String> {
-        root = TreeItem(campaign.settingName)
+    val locationsTree = treeview<String> {
+        root = TreeItem(campaign.locationName)
 
         cellFormat { name ->
             text = name
 
             onUserSelect {
                 if (treeItem?.value?.equals(it) == true) {
-                    val settingView = find<SettingView>(mapOf(SettingView::setting to Setting.read(name)))
-                    settingDisplay.replaceChildren(settingView.root)
+                    val settingView = find<LocationView>(mapOf(LocationView::location to Location.read(name)))
+                    locationDisplay.replaceChildren(settingView.root)
                 }
             }
         }
@@ -41,16 +41,16 @@ class CampaignView : View() {
         contextmenu {
             item("New") {
                 action {
-                    val newSetting = find<NewSettingFragment>()
-                    Single.wrap(newSetting).subscribe { locale ->
+                    val newLocation = find<NewLocationFragment>()
+                    Single.wrap(newLocation).subscribe { locale ->
                         val selected = selectionModel.selectedItem
                         val addRoot = TreeItem(locale.name)
                         selected.children.add(addRoot)
-                        populateTree(addRoot, { TreeItem(it) }) { parent -> Setting.read(parent.value).localeNames.asIterable() }
-                        val setting = Setting.read(selected.value)
-                        Setting.write(setting.copy(localeNames = setting.localeNames + locale.name))
+                        populateTree(addRoot, { TreeItem(it) }) { parent -> Location.read(parent.value).localeNames.asIterable() }
+                        val location = Location.read(selected.value)
+                        Location.write(location.copy(localeNames = location.localeNames + locale.name))
                     }
-                    newSetting.openWindow()
+                    newLocation.openWindow()
                 }
             }
 
@@ -59,23 +59,23 @@ class CampaignView : View() {
                     val selected = selectionModel.selectedItem
                     val parent = selected.parent
                     parent.children.remove(selected)
-                    val setting = Setting.read(parent.value)
-                    Setting.write(setting.copy(localeNames = setting.localeNames - selected.value))
+                    val location = Location.read(parent.value)
+                    Location.write(location.copy(localeNames = location.localeNames - selected.value))
                 }
             }
 
             item("Add") {
                 action {
-                    val selectSetting = find<SelectSettingFragment>()
-                    Single.wrap(selectSetting).subscribe { locale ->
+                    val selectLocation = find<SelectLocationFragment>()
+                    Single.wrap(selectLocation).subscribe { locale ->
                         val selected = selectionModel.selectedItem
                         val addRoot = TreeItem(locale.name)
                         selected.children.add(addRoot)
-                        populateTree(addRoot, { TreeItem(it) }) { parent -> Setting.read(parent.value).localeNames.asIterable() }
-                        val setting = Setting.read(selected.value)
-                        Setting.write(setting.copy(localeNames = setting.localeNames + locale.name))
+                        populateTree(addRoot, { TreeItem(it) }) { parent -> Location.read(parent.value).localeNames.asIterable() }
+                        val setting = Location.read(selected.value)
+                        Location.write(setting.copy(localeNames = setting.localeNames + locale.name))
                     }
-                    selectSetting.openWindow()
+                    selectLocation.openWindow()
                 }
             }
 
@@ -84,23 +84,23 @@ class CampaignView : View() {
                     val selected = selectionModel.selectedItem
                     val parent = selected.parent
                     parent.children.remove(selected)
-                    val setting = Setting.read(parent.value)
-                    Setting.write(setting.copy(localeNames = setting.localeNames - selected.value))
-                    Setting.delete(selected.value)
+                    val location = Location.read(parent.value)
+                    Location.write(location.copy(localeNames = location.localeNames - selected.value))
+                    Location.delete(selected.value)
                 }
             }
         }
 
-        populate { parent -> Setting.read(parent.value).localeNames.asIterable() }
+        populate { parent -> Location.read(parent.value).localeNames.asIterable() }
     }
 
-    val settings = hbox {
-        this += settingsTree
-        this += settingDisplay
+    val locations = hbox {
+        this += locationsTree
+        this += locationDisplay
     }
 
     override val root = vbox {
         this += menu
-        this += settings
+        this += locations
     }
 }
