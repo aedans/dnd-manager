@@ -18,7 +18,6 @@ class LocationView : Fragment() {
     val characters = listview<String> {
         Observable.fromIterable(location.characterNames).subscribe { items.add(it) }
 
-        Observable.wrap(Database.writes<Character>()).subscribe { items.add(it.name) }
         Observable.wrap(Database.deletes<Character>()).subscribe { items.remove(it) }
 
         selectionModel.selectionMode = SelectionMode.SINGLE

@@ -118,7 +118,7 @@ class CampaignView : View() {
     val characters = listview<String> {
         Database.list<Character>().subscribe { items.add(it.name) }
 
-        Observable.wrap(Database.writes<Character>()).subscribe { items.add(it.name) }
+        Observable.wrap(Database.writes<Character>()).subscribe { if (!items.contains(it.name)) items.add(it.name) }
         Observable.wrap(Database.deletes<Character>()).subscribe { items.remove(it) }
 
         selectionModel.selectionMode = SelectionMode.SINGLE
@@ -148,7 +148,6 @@ class CampaignView : View() {
                 action {
                     val newCharacter = find<NewCharacterFragment>()
                     Single.wrap(newCharacter).subscribe { character ->
-                        this@listview.items.add(character.name)
                         Database.write(character)
                     }
                     newCharacter.openWindow()
@@ -158,7 +157,6 @@ class CampaignView : View() {
             item("Delete") {
                 action {
                     val name = selectionModel.selectedItem
-                    this@listview.items.remove(name)
                     Database.delete<Character>(name)
                 }
             }
