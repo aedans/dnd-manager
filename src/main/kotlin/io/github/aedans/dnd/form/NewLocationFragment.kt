@@ -14,7 +14,7 @@ class NewLocationFragment : Fragment(), SingleObserverSource<Location> by Single
             shortcut("Enter")
             action {
                 val name = Util.standardizeName(name.text)
-                val location = Location(Util.standardizeName(name), emptyList())
+                val location = Location(Util.standardizeName(name), emptyList(), emptyList())
                 Location.write(location)
                 onSuccess(location)
                 close()

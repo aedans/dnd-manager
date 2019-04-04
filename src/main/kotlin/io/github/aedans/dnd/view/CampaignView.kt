@@ -9,7 +9,6 @@ import io.github.aedans.dnd.model.Location
 import io.reactivex.Single
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TreeItem
-import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
@@ -28,7 +27,7 @@ class CampaignView : View() {
         }
     }
 
-    val display = Pane()
+    val locationDisplay = Pane()
 
     val locationsTree = treeview<String> {
         root = TreeItem(campaign.locationName)
@@ -38,11 +37,19 @@ class CampaignView : View() {
         cellFormat { name ->
             text = name
 
-            onUserSelect {
-                if (treeItem?.value?.equals(it) == true) {
-                    val locationView = find<LocationView>(mapOf(LocationView::location to Location.read(name)))
-                    display.replaceChildren(locationView.root)
-                }
+            fun action(name: String) {
+                val locationView = find<LocationView>(mapOf(LocationView::location to Location.read(name)))
+                locationDisplay.replaceChildren(locationView.root)
+            }
+
+            addEventFilter(MouseEvent.MOUSE_CLICKED) @Suppress("RedundantLambdaArrow") { _ ->
+                val selectedItem = treeItem?.value
+                if (selectedItem != null) action(selectedItem)
+            }
+
+            addEventFilter(KeyEvent.KEY_PRESSED) @Suppress("RedundantLambdaArrow") { _ ->
+                val selectedItem = treeItem?.value
+                if (selectedItem != null) action(selectedItem)
             }
         }
 
@@ -54,7 +61,9 @@ class CampaignView : View() {
                         val selected = selectionModel.selectedItem
                         val addRoot = TreeItem(locale.name)
                         selected.children.add(addRoot)
-                        populateTree(addRoot, { TreeItem(it) }) { parent -> Location.read(parent.value).localeNames.asIterable() }
+                        populateTree(addRoot, { TreeItem(it) }) { parent ->
+                            Location.read(parent.value).localeNames.asIterable()
+                        }
                         val location = Location.read(selected.value)
                         Location.write(location.copy(localeNames = location.localeNames + locale.name))
                     }
@@ -79,7 +88,9 @@ class CampaignView : View() {
                         val selected = selectionModel.selectedItem
                         val addRoot = TreeItem(locale.name)
                         selected.children.add(addRoot)
-                        populateTree(addRoot, { TreeItem(it) }) { parent -> Location.read(parent.value).localeNames.asIterable() }
+                        populateTree(addRoot, { TreeItem(it) }) { parent ->
+                            Location.read(parent.value).localeNames.asIterable()
+                        }
                         val setting = Location.read(selected.value)
                         Location.write(setting.copy(localeNames = setting.localeNames + locale.name))
                     }
@@ -100,6 +111,8 @@ class CampaignView : View() {
         }
     }
 
+    val characterDisplay = Pane()
+
     val characters = listview<String> {
         Character.list().subscribe { items.add(it.name) }
 
@@ -110,7 +123,7 @@ class CampaignView : View() {
             fun action(name: String) {
                 if (item?.equals(name) == true) {
                     val characterView = find<CharacterView>(mapOf(CharacterView::character to Character.read(name)))
-                    display.replaceChildren(characterView.root)
+                    characterDisplay.replaceChildren(characterView.root)
                 }
             }
 
@@ -152,7 +165,8 @@ class CampaignView : View() {
             this += locationsTree
             this += characters
         }
-        this += display
+        this += locationDisplay
+        this += characterDisplay
     }
 
     override val root = vbox {

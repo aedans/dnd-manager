@@ -5,9 +5,11 @@ import io.github.aedans.dnd.controller.Util
 import io.reactivex.Observable
 import java.io.File
 
-data class Location(val name: String, val localeNames: List<String>) {
+data class Location(val name: String,
+                    val localeNames: List<String>,
+                    val characterNames: List<String>) {
     companion object {
-        val default = Location("World", emptyList())
+        val default = Location("World", emptyList(), emptyList())
 
         fun read(locationName: String) =
             Gson.read<Location>(File(Util.locationsFile, "$locationName.json"))
