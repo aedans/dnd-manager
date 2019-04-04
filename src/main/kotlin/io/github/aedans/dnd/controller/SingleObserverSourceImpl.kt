@@ -3,7 +3,7 @@ package io.github.aedans.dnd.controller
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 
-class SingleImpl<T> : SingleObserverSource<T> {
+class SingleObserverSourceImpl<T> : SingleObserverSource<T> {
     private val observers: MutableList<SingleObserver<in T>> = mutableListOf()
 
     override fun subscribe(observer: SingleObserver<in T>) {

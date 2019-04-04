@@ -7,6 +7,7 @@ import io.github.aedans.dnd.model.Campaign
 import io.github.aedans.dnd.model.Character
 import io.github.aedans.dnd.model.Location
 import io.github.aedans.dnd.controller.Database
+import io.reactivex.Observable
 import io.reactivex.Single
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TreeItem
@@ -116,6 +117,9 @@ class CampaignView : View() {
 
     val characters = listview<String> {
         Database.list<Character>().subscribe { items.add(it.name) }
+
+        Observable.wrap(Database.writes<Character>()).subscribe { items.add(it.name) }
+        Observable.wrap(Database.deletes<Character>()).subscribe { items.remove(it) }
 
         selectionModel.selectionMode = SelectionMode.SINGLE
         cellFormat { name ->
