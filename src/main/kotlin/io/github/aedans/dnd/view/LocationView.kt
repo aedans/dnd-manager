@@ -18,14 +18,18 @@ class LocationView : Fragment() {
     val name = label(location.name)
 
     val characters = listview<String> {
-        Observable.fromIterable(location.characterNames).subscribe { items.add(it) }
+        fun characters(location: Location): Observable<String> = Observable
+            .fromIterable(location.characterNames)
+            .concatWith(Observable.fromIterable(location.localeNames)
+                .flatMap { characters(Database.read(it)) })
+
+        characters(location).subscribe { items.add(it) }
 
         Observable.wrap(Database.deletes<Character>()).subscribe { items.remove(it) }
 
         selectionModel.selectionMode = SelectionMode.SINGLE
         cellFormat { name ->
             text = name
-
 
             fun action(name: String) {
                 val campaignView = find<CampaignView>()
