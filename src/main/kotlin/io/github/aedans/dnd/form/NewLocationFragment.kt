@@ -1,5 +1,6 @@
 package io.github.aedans.dnd.form
 
+import io.github.aedans.dnd.controller.Database
 import io.github.aedans.dnd.controller.SingleImpl
 import io.github.aedans.dnd.controller.SingleObserverSource
 import io.github.aedans.dnd.controller.Util
@@ -15,7 +16,7 @@ class NewLocationFragment : Fragment(), SingleObserverSource<Location> by Single
             action {
                 val name = Util.standardizeName(name.text)
                 val location = Location(Util.standardizeName(name), emptyList(), emptyList())
-                Location.write(location)
+                Database.write(location)
                 onSuccess(location)
                 close()
             }

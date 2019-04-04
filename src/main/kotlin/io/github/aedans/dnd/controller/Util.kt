@@ -4,9 +4,6 @@ import java.io.File
 
 object Util {
     val dataFile = File("data").apply { mkdir() }
-    val campaignsFile = File(dataFile, "campaigns").apply { mkdir() }
-    val locationsFile = File(dataFile, "locations").apply { mkdir() }
-    val charactersFile = File(dataFile, "characters").apply { mkdir() }
 
     val spacePattern = "\\s+".toPattern()
 

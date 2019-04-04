@@ -4,10 +4,10 @@ import io.github.aedans.dnd.form.NewCharacterFragment
 import io.github.aedans.dnd.form.SelectCharacterFragment
 import io.github.aedans.dnd.model.Character
 import io.github.aedans.dnd.model.Location
+import io.github.aedans.dnd.controller.Database
 import io.reactivex.Observable
 import io.reactivex.Single
 import javafx.scene.control.SelectionMode
-import javafx.scene.control.TreeItem
 import tornadofx.*
 
 class LocationView : Fragment() {
@@ -29,8 +29,8 @@ class LocationView : Fragment() {
                     val newCharacter = find<NewCharacterFragment>()
                     Single.wrap(newCharacter).subscribe { character ->
                         this@listview.items.add(character.name)
-                        Character.write(character)
-                        Location.write(location.copy(characterNames = location.characterNames + character.name))
+                        Database.write(character)
+                        Database.write(location.copy(characterNames = location.characterNames + character.name))
                     }
                     newCharacter.openWindow()
                 }
@@ -40,7 +40,7 @@ class LocationView : Fragment() {
                 action {
                     val selected = selectionModel.selectedItem
                     this@listview.items.remove(selected)
-                    Location.write(location.copy(characterNames = location.characterNames - selected))
+                    Database.write(location.copy(characterNames = location.characterNames - selected))
                 }
             }
 
@@ -49,7 +49,7 @@ class LocationView : Fragment() {
                     val selectCharacter = find<SelectCharacterFragment>()
                     Single.wrap(selectCharacter).subscribe { character ->
                         this@listview.items.add(character.name)
-                        Location.write(location.copy(characterNames = location.characterNames + character.name))
+                        Database.write(location.copy(characterNames = location.characterNames + character.name))
                     }
                     selectCharacter.openWindow()
                 }
@@ -59,8 +59,8 @@ class LocationView : Fragment() {
                 action {
                     val selected = selectionModel.selectedItem
                     this@listview.items.remove(selected)
-                    Location.write(location.copy(characterNames = location.characterNames - selected))
-                    Character.delete(selected)
+                    Database.write(location.copy(characterNames = location.characterNames - selected))
+                    Database.delete<Character>(selected)
                 }
             }
         }

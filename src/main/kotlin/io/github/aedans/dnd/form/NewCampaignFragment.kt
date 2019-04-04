@@ -1,5 +1,6 @@
 package io.github.aedans.dnd.form
 
+import io.github.aedans.dnd.controller.Database
 import io.github.aedans.dnd.controller.SingleImpl
 import io.github.aedans.dnd.controller.SingleObserverSource
 import io.github.aedans.dnd.controller.Util
@@ -15,16 +16,16 @@ class NewCampaignFragment : Fragment(), SingleObserverSource<Campaign> by Single
         val locations = listview<Location> {
             selectionModel.selectionMode = SelectionMode.SINGLE
             cellFormat { text = it.name }
-            Location.list().subscribe { items.add(it) }
+            Database.list<Location>().subscribe { items.add(it) }
         }
 
         button("Create") {
             shortcut("Enter")
             action {
                 val name = Util.standardizeName(name.text)
-                val location = locations.selectedItem ?: Location.default.also { Location.write(it) }
+                val location = locations.selectedItem ?: Location.default.also { Database.write(it) }
                 val campaign = Campaign(name, location.name)
-                Campaign.write(campaign)
+                Database.write(campaign)
                 onSuccess(campaign)
                 close()
             }

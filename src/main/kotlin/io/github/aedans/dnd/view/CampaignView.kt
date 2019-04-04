@@ -6,6 +6,7 @@ import io.github.aedans.dnd.form.SelectLocationFragment
 import io.github.aedans.dnd.model.Campaign
 import io.github.aedans.dnd.model.Character
 import io.github.aedans.dnd.model.Location
+import io.github.aedans.dnd.controller.Database
 import io.reactivex.Single
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TreeItem
@@ -32,13 +33,13 @@ class CampaignView : View() {
     val locationsTree = treeview<String> {
         root = TreeItem(campaign.locationName)
 
-        populate { parent -> Location.read(parent.value).localeNames.asIterable() }
+        populate { parent -> Database.read<Location>(parent.value).localeNames.asIterable() }
 
         cellFormat { name ->
             text = name
 
             fun action(name: String) {
-                val locationView = find<LocationView>(mapOf(LocationView::location to Location.read(name)))
+                val locationView = find<LocationView>(mapOf(LocationView::location to Database.read<Location>(name)))
                 locationDisplay.replaceChildren(locationView.root)
             }
 
@@ -62,10 +63,10 @@ class CampaignView : View() {
                         val addRoot = TreeItem(locale.name)
                         selected.children.add(addRoot)
                         populateTree(addRoot, { TreeItem(it) }) { parent ->
-                            Location.read(parent.value).localeNames.asIterable()
+                            Database.read<Location>(parent.value).localeNames.asIterable()
                         }
-                        val location = Location.read(selected.value)
-                        Location.write(location.copy(localeNames = location.localeNames + locale.name))
+                        val location = Database.read<Location>(selected.value)
+                        Database.write(location.copy(localeNames = location.localeNames + locale.name))
                     }
                     newLocation.openWindow()
                 }
@@ -76,8 +77,8 @@ class CampaignView : View() {
                     val selected = selectionModel.selectedItem
                     val parent = selected.parent
                     parent.children.remove(selected)
-                    val location = Location.read(parent.value)
-                    Location.write(location.copy(localeNames = location.localeNames - selected.value))
+                    val location = Database.read<Location>(parent.value)
+                    Database.write(location.copy(localeNames = location.localeNames - selected.value))
                 }
             }
 
@@ -89,10 +90,10 @@ class CampaignView : View() {
                         val addRoot = TreeItem(locale.name)
                         selected.children.add(addRoot)
                         populateTree(addRoot, { TreeItem(it) }) { parent ->
-                            Location.read(parent.value).localeNames.asIterable()
+                            Database.read<Location>(parent.value).localeNames.asIterable()
                         }
-                        val setting = Location.read(selected.value)
-                        Location.write(setting.copy(localeNames = setting.localeNames + locale.name))
+                        val setting = Database.read<Location>(selected.value)
+                        Database.write(setting.copy(localeNames = setting.localeNames + locale.name))
                     }
                     selectLocation.openWindow()
                 }
@@ -103,9 +104,9 @@ class CampaignView : View() {
                     val selected = selectionModel.selectedItem
                     val parent = selected.parent
                     parent.children.remove(selected)
-                    val location = Location.read(parent.value)
-                    Location.write(location.copy(localeNames = location.localeNames - selected.value))
-                    Location.delete(selected.value)
+                    val location = Database.read<Location>(parent.value)
+                    Database.write(location.copy(localeNames = location.localeNames - selected.value))
+                    Database.delete<Location>(selected.value)
                 }
             }
         }
@@ -114,7 +115,7 @@ class CampaignView : View() {
     val characterDisplay = Pane()
 
     val characters = listview<String> {
-        Character.list().subscribe { items.add(it.name) }
+        Database.list<Character>().subscribe { items.add(it.name) }
 
         selectionModel.selectionMode = SelectionMode.SINGLE
         cellFormat { name ->
@@ -122,7 +123,7 @@ class CampaignView : View() {
 
             fun action(name: String) {
                 if (item?.equals(name) == true) {
-                    val characterView = find<CharacterView>(mapOf(CharacterView::character to Character.read(name)))
+                    val characterView = find<CharacterView>(mapOf(CharacterView::character to Database.read<Character>(name)))
                     characterDisplay.replaceChildren(characterView.root)
                 }
             }
@@ -144,7 +145,7 @@ class CampaignView : View() {
                     val newCharacter = find<NewCharacterFragment>()
                     Single.wrap(newCharacter).subscribe { character ->
                         this@listview.items.add(character.name)
-                        Character.write(character)
+                        Database.write(character)
                     }
                     newCharacter.openWindow()
                 }
@@ -154,7 +155,7 @@ class CampaignView : View() {
                 action {
                     val name = selectionModel.selectedItem
                     this@listview.items.remove(name)
-                    Character.delete(name)
+                    Database.delete<Character>(name)
                 }
             }
         }

@@ -2,6 +2,8 @@ package io.github.aedans.dnd.view
 
 import io.github.aedans.dnd.form.NewCampaignFragment
 import io.github.aedans.dnd.model.Campaign
+import io.github.aedans.dnd.controller.Database
+import io.github.aedans.dnd.model.Named
 import io.reactivex.Single
 import javafx.scene.control.SelectionMode
 import tornadofx.*
@@ -20,7 +22,7 @@ class HomeView : View() {
             text = it
 
             onDoubleClick {
-                replaceWith(find<CampaignView>(mapOf(CampaignView::campaign to Campaign.read(it))))
+                replaceWith(find<CampaignView>(mapOf(CampaignView::campaign to Database.read<Campaign>(it))))
             }
         }
 
@@ -36,13 +38,13 @@ class HomeView : View() {
             item("Delete") {
                 action {
                     val selected = selectionModel.selectedItem
-                    Campaign.delete(selected)
+                    Database.delete<Campaign>(selected)
                     this@listview.items.remove(selected)
                 }
             }
         }
 
-        Campaign.list().subscribe { items.add(it.name) }
+        Database.list<Campaign>().subscribe { items.add(it.name) }
     }
 
     override val root = vbox {

@@ -1,5 +1,6 @@
 package io.github.aedans.dnd.form
 
+import io.github.aedans.dnd.controller.Database
 import io.github.aedans.dnd.controller.SingleImpl
 import io.github.aedans.dnd.controller.SingleObserverSource
 import io.github.aedans.dnd.model.Location
@@ -24,7 +25,7 @@ class SelectLocationFragment : Fragment(), SingleObserverSource<Location> by Sin
         val locations = listview<Location> {
             selectionModel.selectionMode = SelectionMode.SINGLE
             cellFormat { text = it.name }
-            Location.list().subscribe { items.add(it) }
+            Database.list<Location>().subscribe { items.add(it) }
         }
 
         button("Select") {

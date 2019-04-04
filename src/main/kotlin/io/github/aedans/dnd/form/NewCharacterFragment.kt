@@ -1,5 +1,6 @@
 package io.github.aedans.dnd.form
 
+import io.github.aedans.dnd.controller.Database
 import io.github.aedans.dnd.controller.SingleImpl
 import io.github.aedans.dnd.controller.SingleObserverSource
 import io.github.aedans.dnd.controller.Util
@@ -15,7 +16,7 @@ class NewCharacterFragment : Fragment(), SingleObserverSource<Character> by Sing
             action {
                 val name = Util.standardizeName(name.text)
                 val character = Character(name)
-                Character.write(character)
+                Database.write(character)
                 onSuccess(character)
                 close()
             }

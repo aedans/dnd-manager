@@ -1,5 +1,6 @@
 package io.github.aedans.dnd.form
 
+import io.github.aedans.dnd.controller.Database
 import io.github.aedans.dnd.controller.SingleImpl
 import io.github.aedans.dnd.controller.SingleObserverSource
 import io.github.aedans.dnd.model.Character
@@ -24,7 +25,7 @@ class SelectCharacterFragment : Fragment(), SingleObserverSource<Character> by S
         val characters = listview<Character> {
             selectionModel.selectionMode = SelectionMode.SINGLE
             cellFormat { text = it.name }
-            Character.list().subscribe { items.add(it) }
+            Database.list<Character>().subscribe { items.add(it) }
         }
 
         button("Select") {
