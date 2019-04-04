@@ -7,7 +7,6 @@ class SingleImpl<T> : SingleObserverSource<T> {
     private val observers: MutableList<SingleObserver<in T>> = mutableListOf()
 
     override fun subscribe(observer: SingleObserver<in T>) {
-        println(observer)
         observers += observer
     }
 
