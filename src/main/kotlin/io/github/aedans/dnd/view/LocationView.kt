@@ -8,6 +8,8 @@ import io.github.aedans.dnd.controller.Database
 import io.reactivex.Observable
 import io.reactivex.Single
 import javafx.scene.control.SelectionMode
+import javafx.scene.input.KeyEvent
+import javafx.scene.input.MouseEvent
 import tornadofx.*
 
 class LocationView : Fragment() {
@@ -23,6 +25,25 @@ class LocationView : Fragment() {
         selectionModel.selectionMode = SelectionMode.SINGLE
         cellFormat { name ->
             text = name
+
+
+            fun action(name: String) {
+                val campaignView = find<CampaignView>()
+                if (item?.equals(name) == true) {
+                    val characterView = find<CharacterView>(mapOf(CharacterView::character to Database.read<Character>(name)))
+                    campaignView.characterDisplay.replaceChildren(characterView.root)
+                }
+            }
+
+            addEventFilter(MouseEvent.MOUSE_CLICKED) { event ->
+                val selectedItem = selectedItem
+                if (selectedItem != null && event.target.isInsideRow()) action(selectedItem)
+            }
+
+            addEventFilter(KeyEvent.KEY_PRESSED) { event ->
+                val selectedItem = selectedItem
+                if (!event.isMetaDown && selectedItem != null) action(selectedItem)
+            }
         }
 
         contextmenu {

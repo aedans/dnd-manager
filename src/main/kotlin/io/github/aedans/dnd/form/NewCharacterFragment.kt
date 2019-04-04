@@ -11,11 +11,12 @@ class NewCharacterFragment : Fragment(), SingleObserverSource<Character> by Sing
     override val root = vbox {
         val name = textfield()
 
+        val description = textarea()
+
         button("Create") {
             shortcut("Enter")
             action {
-                val name = Util.standardizeName(name.text)
-                val character = Character(name)
+                val character = Character(Util.standardizeName(name.text), description.text)
                 Database.write(character)
                 onSuccess(character)
                 close()
