@@ -1,24 +1,18 @@
 package io.github.aedans.dnd.form
 
 import io.github.aedans.dnd.controller.Database
-import io.github.aedans.dnd.controller.SingleObserverSourceImpl
-import io.github.aedans.dnd.controller.SingleObserverSource
 import io.github.aedans.dnd.model.Location
-import io.reactivex.Single
 import javafx.scene.control.SelectionMode
 import tornadofx.*
 
-class SelectLocationFragment : Fragment(), SingleObserverSource<Location> by SingleObserverSourceImpl() {
+class SelectLocationForm : Form<Location>() {
     override val root = vbox {
         button("New Location") {
             useMaxWidth = true
             action {
-                val newLocation = find<NewLocationFragment>()
-                newLocation.wrap.subscribe { x ->
+                find<NewLocationForm>().openSubscribe { x ->
                     onSuccess(x)
-                    close()
                 }
-                newLocation.openWindow()
             }
         }
 

@@ -1,7 +1,7 @@
 package io.github.aedans.dnd.view
 
 import io.github.aedans.dnd.controller.Database
-import io.github.aedans.dnd.form.NewCampaignFragment
+import io.github.aedans.dnd.form.NewCampaignForm
 import io.github.aedans.dnd.model.Campaign
 import javafx.scene.control.SelectionMode
 import tornadofx.*
@@ -12,7 +12,7 @@ class HomeView : View() {
         menu("File") {
             item("New Campaign") {
                 action {
-                    find<NewCampaignFragment>().openWindow()
+                    find<NewCampaignForm>().open()
                 }
             }
         }

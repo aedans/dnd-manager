@@ -7,7 +7,7 @@ import io.github.aedans.dnd.controller.Util
 import io.github.aedans.dnd.model.Character
 import tornadofx.*
 
-class NewCharacterFragment : Fragment(), SingleObserverSource<Character> by SingleObserverSourceImpl() {
+class NewCharacterForm : Form<Character>() {
     override val root = vbox {
         val name = textfield()
         val race = textfield()

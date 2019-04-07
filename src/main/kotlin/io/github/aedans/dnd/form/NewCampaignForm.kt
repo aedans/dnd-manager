@@ -9,7 +9,7 @@ import io.github.aedans.dnd.model.Location
 import javafx.scene.control.SelectionMode
 import tornadofx.*
 
-class NewCampaignFragment : Fragment(), SingleObserverSource<Campaign> by SingleObserverSourceImpl() {
+class NewCampaignForm : Form<Campaign>() {
     override val root = vbox {
         val name = textfield()
 
@@ -27,7 +27,6 @@ class NewCampaignFragment : Fragment(), SingleObserverSource<Campaign> by Single
                 val campaign = Campaign(name, location.name)
                 Database.write(campaign)
                 onSuccess(campaign)
-                close()
             }
         }
     }

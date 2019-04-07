@@ -1,14 +1,13 @@
 package io.github.aedans.dnd.view
 
-import io.github.aedans.dnd.form.NewCharacterFragment
-import io.github.aedans.dnd.form.NewLocationFragment
-import io.github.aedans.dnd.form.SelectLocationFragment
+import io.github.aedans.dnd.form.NewCharacterForm
+import io.github.aedans.dnd.form.NewLocationForm
+import io.github.aedans.dnd.form.SelectLocationForm
 import io.github.aedans.dnd.model.Campaign
 import io.github.aedans.dnd.model.Character
 import io.github.aedans.dnd.model.Location
 import io.github.aedans.dnd.controller.Database
 import io.reactivex.Observable
-import io.reactivex.Single
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TreeItem
 import javafx.scene.input.KeyEvent
@@ -58,8 +57,7 @@ class CampaignView : View() {
         contextmenu {
             item("New") {
                 action {
-                    val newLocation = find<NewLocationFragment>()
-                    newLocation.wrap.subscribe { locale ->
+                    find<NewLocationForm>().openSubscribe { locale ->
                         val selected = selectionModel.selectedItem
                         val addRoot = TreeItem(locale.name)
                         selected.children.add(addRoot)
@@ -69,7 +67,6 @@ class CampaignView : View() {
                         val location = Database.read<Location>(selected.value)
                         Database.write(location.copy(localeNames = location.localeNames + locale.name))
                     }
-                    newLocation.openWindow()
                 }
             }
 
@@ -85,8 +82,7 @@ class CampaignView : View() {
 
             item("Add") {
                 action {
-                    val selectLocation = find<SelectLocationFragment>()
-                    selectLocation.wrap.subscribe { locale ->
+                    find<SelectLocationForm>().openSubscribe { locale ->
                         val selected = selectionModel.selectedItem
                         val addRoot = TreeItem(locale.name)
                         selected.children.add(addRoot)
@@ -96,7 +92,6 @@ class CampaignView : View() {
                         val setting = Database.read<Location>(selected.value)
                         Database.write(setting.copy(localeNames = setting.localeNames + locale.name))
                     }
-                    selectLocation.openWindow()
                 }
             }
 
@@ -146,11 +141,7 @@ class CampaignView : View() {
         contextmenu {
             item("New") {
                 action {
-                    val newCharacter = find<NewCharacterFragment>()
-                    newCharacter.wrap.subscribe { character ->
-                        Database.write(character)
-                    }
-                    newCharacter.openWindow()
+                    find<NewCharacterForm>().open()
                 }
             }
 

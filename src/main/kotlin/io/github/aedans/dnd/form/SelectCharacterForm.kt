@@ -1,24 +1,18 @@
 package io.github.aedans.dnd.form
 
 import io.github.aedans.dnd.controller.Database
-import io.github.aedans.dnd.controller.SingleObserverSourceImpl
-import io.github.aedans.dnd.controller.SingleObserverSource
 import io.github.aedans.dnd.model.Character
-import io.reactivex.Single
 import javafx.scene.control.SelectionMode
 import tornadofx.*
 
-class SelectCharacterFragment : Fragment(), SingleObserverSource<Character> by SingleObserverSourceImpl() {
+class SelectCharacterForm : Form<Character>() {
     override val root = vbox {
         button("New Character") {
             useMaxWidth = true
             action {
-                val newCharacter = find<NewCharacterFragment>()
-                newCharacter.wrap.subscribe { x ->
+                find<NewCharacterForm>().openSubscribe { x ->
                     onSuccess(x)
-                    close()
                 }
-                newCharacter.openWindow()
             }
         }
 

@@ -1,12 +1,11 @@
 package io.github.aedans.dnd.view
 
-import io.github.aedans.dnd.form.NewCharacterFragment
-import io.github.aedans.dnd.form.SelectCharacterFragment
+import io.github.aedans.dnd.form.NewCharacterForm
+import io.github.aedans.dnd.form.SelectCharacterForm
 import io.github.aedans.dnd.model.Character
 import io.github.aedans.dnd.model.Location
 import io.github.aedans.dnd.controller.Database
 import io.reactivex.Observable
-import io.reactivex.Single
 import javafx.scene.control.SelectionMode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
@@ -53,7 +52,7 @@ class LocationView : Fragment() {
         contextmenu {
             item("New") {
                 action {
-                    val newCharacter = find<NewCharacterFragment>()
+                    val newCharacter = find<NewCharacterForm>()
                     newCharacter.wrap.subscribe { character ->
                         this@listview.items.add(character.name)
                         Database.write(character)
@@ -73,12 +72,10 @@ class LocationView : Fragment() {
 
             item("Add") {
                 action {
-                    val selectCharacter = find<SelectCharacterFragment>()
-                    selectCharacter.wrap.subscribe { character ->
+                    find<SelectCharacterForm>().openSubscribe { character ->
                         this@listview.items.add(character.name)
                         Database.write(location.copy(characterNames = location.characterNames + character.name))
                     }
-                    selectCharacter.openWindow()
                 }
             }
 
