@@ -10,7 +10,8 @@ object Database {
 
     val writes = mutableMapOf<Class<out Named>, ObservableObserverSourceImpl<Named>>()
 
-    inline fun <reified T : Named> writes() = writes.getOrPut(T::class.java) { ObservableObserverSourceImpl() }
+    @Suppress("UNCHECKED_CAST")
+    inline fun <reified T : Named> writes() = writes.getOrPut(T::class.java) { ObservableObserverSourceImpl() } as ObservableObserverSourceImpl<T>
     inline fun <reified T : Named> write(t: T) {
         writes<T>().onNext(t)
         Gson.write(t, file<T>(t.name))

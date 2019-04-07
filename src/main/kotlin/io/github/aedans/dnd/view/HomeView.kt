@@ -3,19 +3,28 @@ package io.github.aedans.dnd.view
 import io.github.aedans.dnd.controller.Database
 import io.github.aedans.dnd.form.NewCampaignFragment
 import io.github.aedans.dnd.model.Campaign
-import io.reactivex.Single
 import javafx.scene.control.SelectionMode
 import tornadofx.*
 
 class HomeView : View() {
+
     val menu = menubar {
         menu("File") {
-
+            item("New Campaign") {
+                action {
+                    find<NewCampaignFragment>().openWindow()
+                }
+            }
         }
     }
 
     val campaignList = listview<String> {
         selectionModel.selectionMode = SelectionMode.SINGLE
+
+        Database.writes<Campaign>().wrap.subscribe { campaign ->
+            items.remove(campaign.name)
+            items.add(campaign.name)
+        }
 
         cellFormat {
             text = it
@@ -26,14 +35,6 @@ class HomeView : View() {
         }
 
         contextmenu {
-            item("New") {
-                action {
-                    val newCampaign = find<NewCampaignFragment>()
-                    Single.wrap(newCampaign).subscribe { campaign -> this@listview.items.add(campaign.name) }
-                    newCampaign.openWindow()
-                }
-            }
-
             item("Delete") {
                 action {
                     val selected = selectionModel.selectedItem
