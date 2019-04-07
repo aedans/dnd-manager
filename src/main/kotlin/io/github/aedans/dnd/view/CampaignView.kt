@@ -59,7 +59,7 @@ class CampaignView : View() {
             item("New") {
                 action {
                     val newLocation = find<NewLocationFragment>()
-                    Single.wrap(newLocation).subscribe { locale ->
+                    newLocation.wrap.subscribe { locale ->
                         val selected = selectionModel.selectedItem
                         val addRoot = TreeItem(locale.name)
                         selected.children.add(addRoot)
@@ -86,7 +86,7 @@ class CampaignView : View() {
             item("Add") {
                 action {
                     val selectLocation = find<SelectLocationFragment>()
-                    Single.wrap(selectLocation).subscribe { locale ->
+                    selectLocation.wrap.subscribe { locale ->
                         val selected = selectionModel.selectedItem
                         val addRoot = TreeItem(locale.name)
                         selected.children.add(addRoot)
@@ -147,7 +147,7 @@ class CampaignView : View() {
             item("New") {
                 action {
                     val newCharacter = find<NewCharacterFragment>()
-                    Single.wrap(newCharacter).subscribe { character ->
+                    newCharacter.wrap.subscribe { character ->
                         Database.write(character)
                     }
                     newCharacter.openWindow()

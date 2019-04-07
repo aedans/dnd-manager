@@ -54,7 +54,7 @@ class LocationView : Fragment() {
             item("New") {
                 action {
                     val newCharacter = find<NewCharacterFragment>()
-                    Single.wrap(newCharacter).subscribe { character ->
+                    newCharacter.wrap.subscribe { character ->
                         this@listview.items.add(character.name)
                         Database.write(character)
                         Database.write(location.copy(characterNames = location.characterNames + character.name))
@@ -74,7 +74,7 @@ class LocationView : Fragment() {
             item("Add") {
                 action {
                     val selectCharacter = find<SelectCharacterFragment>()
-                    Single.wrap(selectCharacter).subscribe { character ->
+                    selectCharacter.wrap.subscribe { character ->
                         this@listview.items.add(character.name)
                         Database.write(location.copy(characterNames = location.characterNames + character.name))
                     }

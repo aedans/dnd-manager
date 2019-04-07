@@ -1,12 +1,9 @@
 package io.github.aedans.dnd.controller
 
-import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 
 class ObservableObserverSourceImpl<T> : ObservableObserverSource<T> {
-    val wrap: Observable<T> get() = Observable.wrap(this)
-
     private val observers: MutableList<Observer<in T>> = mutableListOf()
 
     override fun subscribe(observer: Observer<in T>) {

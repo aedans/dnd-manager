@@ -14,7 +14,7 @@ class SelectLocationFragment : Fragment(), SingleObserverSource<Location> by Sin
             useMaxWidth = true
             action {
                 val newLocation = find<NewLocationFragment>()
-                Single.wrap(newLocation).subscribe { x ->
+                newLocation.wrap.subscribe { x ->
                     onSuccess(x)
                     close()
                 }

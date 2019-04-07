@@ -14,7 +14,7 @@ class SelectCharacterFragment : Fragment(), SingleObserverSource<Character> by S
             useMaxWidth = true
             action {
                 val newCharacter = find<NewCharacterFragment>()
-                Single.wrap(newCharacter).subscribe { x ->
+                newCharacter.wrap.subscribe { x ->
                     onSuccess(x)
                     close()
                 }

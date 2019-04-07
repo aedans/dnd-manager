@@ -3,9 +3,10 @@ package io.github.aedans.dnd.controller
 import io.github.aedans.dnd.model.Named
 import io.reactivex.Observable
 import java.io.File
+import kotlin.reflect.jvm.jvmName
 
 object Database {
-    inline fun <reified T> directory() = File(Util.dataFile, T::class.simpleName).apply { mkdirs() }
+    inline fun <reified T> directory() = File(Util.dataFile, T::class.jvmName).apply { mkdirs() }
     inline fun <reified T> file(name: String) = File(directory<T>(), "$name.json")
 
     val writes = mutableMapOf<Class<out Named>, ObservableObserverSourceImpl<Named>>()
