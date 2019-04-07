@@ -1,4 +1,4 @@
-package io.github.aedans.dnd.form
+package io.github.aedans.dnd.view.form
 
 import io.github.aedans.dnd.controller.SingleObserverSource
 import io.github.aedans.dnd.controller.SingleObserverSourceImpl

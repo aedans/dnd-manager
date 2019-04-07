@@ -1,7 +1,7 @@
 package io.github.aedans.dnd.view
 
-import io.github.aedans.dnd.form.NewCharacterForm
-import io.github.aedans.dnd.form.SelectCharacterForm
+import io.github.aedans.dnd.view.form.NewCharacterForm
+import io.github.aedans.dnd.view.form.SelectCharacterForm
 import io.github.aedans.dnd.model.Character
 import io.github.aedans.dnd.model.Location
 import io.github.aedans.dnd.controller.Database

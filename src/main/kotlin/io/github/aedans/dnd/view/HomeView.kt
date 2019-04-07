@@ -1,7 +1,7 @@
 package io.github.aedans.dnd.view
 
 import io.github.aedans.dnd.controller.Database
-import io.github.aedans.dnd.form.NewCampaignForm
+import io.github.aedans.dnd.view.form.NewCampaignForm
 import io.github.aedans.dnd.model.Campaign
 import javafx.scene.control.SelectionMode
 import tornadofx.*

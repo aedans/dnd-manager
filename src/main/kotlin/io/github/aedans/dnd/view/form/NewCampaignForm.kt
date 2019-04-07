@@ -1,8 +1,6 @@
-package io.github.aedans.dnd.form
+package io.github.aedans.dnd.view.form
 
 import io.github.aedans.dnd.controller.Database
-import io.github.aedans.dnd.controller.SingleObserverSourceImpl
-import io.github.aedans.dnd.controller.SingleObserverSource
 import io.github.aedans.dnd.controller.Util
 import io.github.aedans.dnd.model.Campaign
 import io.github.aedans.dnd.model.Location
