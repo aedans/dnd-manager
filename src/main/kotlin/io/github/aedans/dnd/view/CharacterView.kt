@@ -6,11 +6,11 @@ import tornadofx.*
 class CharacterView : Fragment() {
     val character: Character by param()
 
-    val name = label(character.name)
+    val header = label("${character.name}, ${character.race}")
     val description = label(character.description)
 
     override val root = vbox {
-        this += name
+        this += header
         this += description
     }
 }

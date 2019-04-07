@@ -10,13 +10,14 @@ import tornadofx.*
 class NewCharacterFragment : Fragment(), SingleObserverSource<Character> by SingleObserverSourceImpl() {
     override val root = vbox {
         val name = textfield()
+        val race = textfield()
 
         val description = textarea()
 
         button("Create") {
             shortcut("Enter")
             action {
-                val character = Character(Util.standardizeName(name.text), description.text)
+                val character = Character(Util.standardizeName(name.text), race.text, description.text)
                 Database.write(character)
                 onSuccess(character)
                 close()
