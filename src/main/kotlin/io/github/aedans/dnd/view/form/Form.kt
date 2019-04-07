@@ -9,7 +9,9 @@ abstract class Form<T> : Fragment(), SingleObserverSource<T> by SingleObserverSo
 
     fun openSubscribe(fn: (T) -> Unit) {
         openWindow()
-        wrap.subscribe(fn)
-        close()
+        wrap.subscribe @Suppress("RedundantLambdaArrow") { it ->
+            fn(it)
+            close()
+        }
     }
 }

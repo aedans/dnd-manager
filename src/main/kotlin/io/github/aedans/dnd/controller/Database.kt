@@ -3,34 +3,45 @@ package io.github.aedans.dnd.controller
 import io.github.aedans.dnd.model.Named
 import io.reactivex.Observable
 import java.io.File
-import kotlin.reflect.jvm.jvmName
 
+@Suppress("UNCHECKED_CAST")
 object Database {
-    inline fun <reified T> directory() = File(Util.dataFile, T::class.jvmName).apply { mkdirs() }
-    inline fun <reified T> file(name: String) = File(directory<T>(), "$name.json")
+    fun <T> directory(clazz: Class<T>) = File(Util.dataFile, clazz.name).apply { mkdirs() }
+    fun <T> file(clazz: Class<T>, name: String) = File(directory(clazz), "$name.json")
 
-    val writes = mutableMapOf<Class<out Named>, ObservableObserverSourceImpl<Named>>()
+    inline fun <reified T> directory() = directory(T::class.java)
+    inline fun <reified T> file(name: String) = file(T::class.java, name)
 
-    @Suppress("UNCHECKED_CAST")
-    inline fun <reified T : Named> writes() = writes.getOrPut(T::class.java) { ObservableObserverSourceImpl() } as ObservableObserverSourceImpl<T>
-    inline fun <reified T : Named> write(t: T) {
-        writes<T>().onNext(t)
-        Gson.write(t, file<T>(t.name))
+    private val writes = mutableMapOf<Class<out Named>, ObservableObserverSourceImpl<Named>>()
+
+    fun <T : Named> writes(clazz: Class<T>) = writes.getOrPut(clazz) { ObservableObserverSourceImpl() } as ObservableObserverSourceImpl<T>
+    fun <T : Named> write(clazz: Class<T>, t: T) {
+        writes(clazz).onNext(t)
+        file(clazz, t.name).writer().use { Gson.write(t, it) }
     }
 
-    val deletes = mutableMapOf<Class<out Named>, ObservableObserverSourceImpl<String>>()
+    inline fun <reified T : Named> writes() = writes(T::class.java)
+    inline fun <reified T : Named> write(t: T) = write(T::class.java, t)
 
-    inline fun <reified T : Named> deletes() = deletes.getOrPut(T::class.java) { ObservableObserverSourceImpl() }
-    inline fun <reified T : Named> delete(name: String) {
-        deletes<T>().onNext(name)
-        file<T>(name).delete()
+    private val deletes = mutableMapOf<Class<out Named>, ObservableObserverSourceImpl<String>>()
+
+    fun <T : Named> deletes(clazz: Class<T>) = deletes.getOrPut(clazz) { ObservableObserverSourceImpl() }
+    fun <T : Named> delete(clazz: Class<T>, name: String) {
+        deletes(clazz).onNext(name)
+        file(clazz, name).delete()
     }
 
-    inline fun <reified T : Named> read(name: String) = Gson.read<T>(file<T>(name))
+    inline fun <reified T : Named> deletes() = deletes(T::class.java)
+    inline fun <reified T : Named> delete(name: String) = delete(T::class.java, name)
 
-    inline fun <reified T : Named> list(): Observable<T> {
-        val sequence = directory<T>().listFiles().asSequence()
+    fun <T> read(clazz: Class<T>, name: String) = file(clazz, name).reader().use { Gson.read(clazz, it) }
+    inline fun <reified T> read(name: String) = read(T::class.java, name)
+
+    fun <T> list(clazz: Class<T>): Observable<T> {
+        val sequence = directory(clazz).listFiles().asSequence()
         return Observable.fromIterable(sequence.asIterable())
-            .map { read<T>(it.nameWithoutExtension) }
+            .map { read(clazz, it.nameWithoutExtension) }
     }
+
+    inline fun <reified T : Named> list() = list(T::class.java)
 }

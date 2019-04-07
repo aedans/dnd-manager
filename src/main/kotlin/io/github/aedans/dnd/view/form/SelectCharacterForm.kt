@@ -1,8 +1,7 @@
 package io.github.aedans.dnd.view.form
 
-import io.github.aedans.dnd.controller.Database
 import io.github.aedans.dnd.model.Character
-import javafx.scene.control.SelectionMode
+import io.github.aedans.dnd.view.list.NamedList
 import tornadofx.*
 
 class SelectCharacterForm : Form<Character>() {
@@ -16,11 +15,8 @@ class SelectCharacterForm : Form<Character>() {
             }
         }
 
-        val characters = listview<Character> {
-            selectionModel.selectionMode = SelectionMode.SINGLE
-            cellFormat { text = it.name }
-            Database.list<Character>().subscribe { items.add(it) }
-        }
+        val characters = NamedList(Character::class.java)
+        this += characters
 
         button("Select") {
             shortcut("Enter")

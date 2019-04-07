@@ -1,8 +1,7 @@
 package io.github.aedans.dnd.view.form
 
-import io.github.aedans.dnd.controller.Database
 import io.github.aedans.dnd.model.Location
-import javafx.scene.control.SelectionMode
+import io.github.aedans.dnd.view.list.NamedList
 import tornadofx.*
 
 class SelectLocationForm : Form<Location>() {
@@ -16,11 +15,8 @@ class SelectLocationForm : Form<Location>() {
             }
         }
 
-        val locations = listview<Location> {
-            selectionModel.selectionMode = SelectionMode.SINGLE
-            cellFormat { text = it.name }
-            Database.list<Location>().subscribe { items.add(it) }
-        }
+        val locations = NamedList(Location::class.java)
+        this += locations
 
         button("Select") {
             shortcut("Enter")

@@ -4,18 +4,15 @@ import io.github.aedans.dnd.controller.Database
 import io.github.aedans.dnd.controller.Util
 import io.github.aedans.dnd.model.Campaign
 import io.github.aedans.dnd.model.Location
-import javafx.scene.control.SelectionMode
+import io.github.aedans.dnd.view.list.NamedList
 import tornadofx.*
 
 class NewCampaignForm : Form<Campaign>() {
     override val root = vbox {
         val name = textfield()
 
-        val locations = listview<Location> {
-            selectionModel.selectionMode = SelectionMode.SINGLE
-            cellFormat { text = it.name }
-            Database.list<Location>().subscribe { items.add(it) }
-        }
+        val locations = NamedList(Location::class.java)
+        this += locations
 
         button("Create") {
             shortcut("Enter")
